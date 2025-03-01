@@ -1,3 +1,4 @@
+
 /*
 Turn you to a dancer
 Yeah (Internet Money, bitch)
@@ -140,17 +141,28 @@ unsigned char* readKeyFromFile(const char* keyFile, size_t keySize);
 std::vector<std::string> get_filenames( std::filesystem::path path );
 
 int main(){
+    int arg = 3;
+
     string path_name = "/home/t3k3l/testdir";
-    for( const auto& name : get_filenames( path_name ) ) {
-        std::cout << name << '\n' ; 
-        string inputFile = name;
-        string encryptedFile = name + "_encryptedmytestfile3";
-        string decryptedFile = "decryptedmytestfile3";
-        const char* keyFile = "aeskey.bin";
-        encrypt(inputFile.c_str(), encryptedFile.c_str(), keyFile);
-        decrypt(encryptedFile.c_str(), decryptedFile.c_str(), keyFile);
-}
-    
+    if(arg !=3){
+        for( const auto& name : get_filenames(path_name)){
+            std::cout << name << '\n';
+            string encryptedFile = name;
+            string decryptedFile = name + "_decrypted";
+            const char* keyFile = "aeskey.bin";
+            decrypt(encryptedFile.c_str(), decryptedFile.c_str(), keyFile);
+
+        }
+    }
+    else{
+        for( const auto& name : get_filenames( path_name ) ) {
+            std::cout << name << '\n' ; 
+            string inputFile = name;
+            string encryptedFile = name + "_enc";
+            const char* keyFile = "aeskey.bin";
+            encrypt(inputFile.c_str(), encryptedFile.c_str(), keyFile);
+        }
+    }
     
     
 }
